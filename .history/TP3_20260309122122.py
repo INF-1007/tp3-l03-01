@@ -40,8 +40,7 @@ def charger_collection(fichier_csv):
                 'titre': ligne['titre'],
                 'auteur': ligne['auteur'],
                 'date_publication': ligne['date_publication']
-            }
-    return bibliotheque
+            
 
 
 

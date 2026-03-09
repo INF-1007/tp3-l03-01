@@ -35,15 +35,7 @@ def charger_collection(fichier_csv):
     bibliotheque = {}
     reader = csv.DictReader(csvfile)
     for ligne in reader:
-        cote = ligne["cote"]
-        bibliotheque[cote] = {
-                'titre': ligne['titre'],
-                'auteur': ligne['auteur'],
-                'date_publication': ligne['date_publication']
-            }
-    return bibliotheque
-
-
+        
 
 
 

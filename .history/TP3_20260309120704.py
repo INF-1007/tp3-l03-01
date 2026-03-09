@@ -33,17 +33,8 @@ Cette partie doit être faite dans une fonction qui s'appelle "charger_collectio
 # Écrire votre code ici
 def charger_collection(fichier_csv):
     bibliotheque = {}
-    reader = csv.DictReader(csvfile)
-    for ligne in reader:
-        cote = ligne["cote"]
-        bibliotheque[cote] = {
-                'titre': ligne['titre'],
-                'auteur': ligne['auteur'],
-                'date_publication': ligne['date_publication']
-            }
-    return bibliotheque
-
-
+    with open "collection_bibliotheque.csv" :
+        for ligne in r 
 
 
 
@@ -209,6 +200,9 @@ def main():
     ############################################################
     
     # Écrire votre code ici 
+    bibliotheque = charger_collection("collection_bibliotheque.csv")
+    print(f"Collection chargée : {len(bibliotheque)} livres.")
+    print(bibliotheque)
     
 
 
