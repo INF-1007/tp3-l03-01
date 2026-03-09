@@ -33,10 +33,11 @@ Cette partie doit être faite dans une fonction qui s'appelle "charger_collectio
 # Écrire votre code ici
 def charger_collection(fichier_csv):
     bibliotheque = {}
-    reader = csv.DictReader(csvfile)
-    for ligne in reader:
-        cote = ligne["cote"]
-        bibliotheque[cote] = {
+    with open(fichier_csv, mode='r', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for ligne in reader:
+            cote = ligne['cote_rangement']
+            bibliotheque[cote] = {
                 'titre': ligne['titre'],
                 'auteur': ligne['auteur'],
                 'date_publication': ligne['date_publication']
@@ -69,6 +70,24 @@ Cette partie doit être faite dans une fonction qui s'appelle "ajouter_nouvelle_
 """
 
 # Écrire votre code ici
+def ajouter_nouvelle_collection(bibliotheque, nouvelle_collection_csv):
+    with open(nouvelle_collection_csv, mode='r', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for ligne in reader:
+            cote = ligne['cote_rangement']
+            titre = ligne['titre']
+            auteur = ligne['auteur']
+            
+            if cote in bibliotheque:
+                print(f"Le livre {cote} ---- {titre} par {auteur} ---- est déjà présent dans la bibliothèque")
+            else:
+                bibliotheque[cote] = {
+                    'titre': titre,
+                    'auteur': auteur,
+                    'date_publication': ligne['date_publication']
+                }
+                print(f"Le livre {cote} ---- {titre} par {auteur} ---- a été ajouté avec succès")
+    return bibliotheque
 
 
 
@@ -92,6 +111,14 @@ Cette partie doit être faite dans une fonction qui s'appelle "modifier_cote_sha
 """
 
 # Écrire votre code ici
+def modifier_cote_shakespeare(bibliotheque):
+    anciennes_cotes = list(bibliotheque.keys())
+    for cote in anciennes_cotes:
+        if bibliotheque[cote]['auteur'] == "William Shakespeare":
+            # La cote est Sxxx, on veut WSxxx
+            nouvelle_cote = "WS" + cote[1:] # Retire 'S' et ajoute 'WS'
+            bibliotheque[nouvelle_cote] = bibliotheque.pop(cote)
+    return bibliotheque
 
 
 
@@ -209,26 +236,21 @@ def main():
     ############################################################
     
     # Écrire votre code ici 
-    
-
-
-
+    bibliotheque = charger_collection("collection_bibliotheque.csv")
 
     ############################################################
     # Partie 2 : Appel de la fonction ajouter_nouvelle_collection
     ############################################################
     
     # Écrire votre code ici 
-    
-
-
-
+    bibliotheque = ajouter_nouvelle_collection(bibliotheque, "nouvelle_collection.csv")
 
     ############################################################
     # Partie 3 : Appel de la fonction modifier_cote_shakespeare
     ############################################################
 
     # Écrire votre code ici 
+    bibliotheque = modifier_cote_shakespeare(bibliotheque)
 
     
 
