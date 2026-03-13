@@ -104,11 +104,27 @@ Cette partie doit être faite dans une fonction qui s'appelle "ajouter_emprunts"
 
 # Écrire votre code ici
 
+def ajouter_emprunts(bibliotheque, emprunts_csv):
+    
+    with open(emprunts_csv, 'r', encoding="utf-8") as f:
+        lecteur = csv.DictReader(f)
 
+        emprunt = {}
+        for ligne in lecteur:
+            cote = ligne["cote_rangement"]
+            date = ligne["date_emprunt"]
+            emprunt[cote] = date
 
+        for cote in bibliotheque:
 
+            if cote in emprunt:
+                bibliotheque[cote]["emprunt"] = "emprunté"
+                bibliotheque[cote]["date_emprunt"] = emprunt[cote]
+            else:
+                bibliotheque[cote]["emprunt"] = "disponible"
+                bibliotheque[cote]["date_emprunt"] = None
 
-
+    return bibliotheque
 
 
 
@@ -134,10 +150,36 @@ Cette partie doit être faite dans une fonction qui s'appelle "ajouter_retards".
 """
 
 # Écrire votre code ici
+def calculer_retards(bibliotheque):
 
+    today = datetime.now()
 
+    print("\n--- Livres en retard ---")
 
+    for cote in bibliotheque:
 
+        livre = bibliotheque[cote]
+        livre["frais_retard"] = 0
+        livre["livres_perdus"] = False
+
+        if livre["emprunts"] == "emprunté":
+            if livre["date_emprunt"] != None:
+                date_emprunt = datetime.strptime(livre["date_emprunt"], "%Y-%m-%d")
+                jours_ecoules = (today - date_emprunt).days
+
+            if jours_ecoules > 30:
+                jours_retard = jours_ecoules - 30
+                frais = jours_retard * 2
+
+                if frais > 100:
+                    frais = 100
+                livre["frais_retard"] = frais
+                print(cote, " - ", livre["titre"], " : ", frais, "$ de frais")
+
+            if jours_ecoules > 365:
+                livre["livres_perdus"] = True
+
+    return bibliotheque
 
 
 
@@ -162,7 +204,30 @@ Cette partie doit être faite dans une fonction qui s'appelle "sauvegarder_bibli
 """
 
 # Écrire votre code ici
+def sauvegarder_bibliotheque(bibliotheque, fichier_sortie):
 
+    with open(fichier_sortie, 'w', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        writer.writerow([
+            "cote_rangement",
+            "titre",
+            "auteur",
+            "date_publication",
+            "emprunt",
+            "date_emprunt",
+            "frais_retard"
+        ])
+        for cote in bibliotheque:
+            livre = bibliotheque[cote]
+            writer.writerow([
+                cote,
+                livre["titre"],
+                livre["auteur"],
+                livre["date_publication"],
+                livre["emprunts"],
+                livre["date_emprunt"],
+                livre["frais_retard"]
+            ])
 
 
 
@@ -225,7 +290,7 @@ def main():
     ############################################################
 
     # Écrire votre code ici 
-    
+    bibliotheque = ajouter_emprunts(bibliotheque,"emprunts.csv")
 
 
 
@@ -235,7 +300,7 @@ def main():
     ############################################################
 
     # Écrire votre code ici 
-   
+    bibliotheque = calculer_retards(bibliotheque)
 
    
 
@@ -245,7 +310,7 @@ def main():
     
     # Écrire votre code ici 
     
-
+    sauvegarder_bibliotheque(bibliotheque, "bibliotheque_nouvelle.csv")
 
 
 
