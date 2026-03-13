@@ -147,7 +147,7 @@ Cette partie doit être faite dans une fonction qui s'appelle "ajouter_emprunts"
 
 def ajouter_emprunts(bibliotheque, emprunts_csv):
     
-    with open(emprunts_csv, 'r', encoding="utf-8") as f:
+    with open(emprunts_csv, mode = 'r', encoding='utf-8') as f:
         lecteur = csv.DictReader(f)
 
         emprunt = {}
