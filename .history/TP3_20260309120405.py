@@ -31,22 +31,10 @@ Cette partie doit être faite dans une fonction qui s'appelle "charger_collectio
 """
 
 # Écrire votre code ici
-def charger_collection(fichier_csv):
+def charger_collection():
+
     bibliotheque = {}
-    with open(fichier_csv, mode='r', encoding='utf-8') as csvfile:
-        reader = csv.DictReader(csvfile)
-        for ligne in reader:
-            cote = ligne['cote_rangement']
-            bibliotheque[cote] = {
-                'titre': ligne['titre'],
-                'auteur': ligne['auteur'],
-                'date_publication': ligne['date_publication']
-            }
-    return bibliotheque
-
-
-
-
+    open collection_bibliotheque
 
 
 
@@ -70,24 +58,6 @@ Cette partie doit être faite dans une fonction qui s'appelle "ajouter_nouvelle_
 """
 
 # Écrire votre code ici
-def ajouter_nouvelle_collection(bibliotheque, nouvelle_collection_csv):
-    with open(nouvelle_collection_csv, mode='r', encoding='utf-8') as csvfile:
-        reader = csv.DictReader(csvfile)
-        for ligne in reader:
-            cote = ligne['cote_rangement']
-            titre = ligne['titre']
-            auteur = ligne['auteur']
-            
-            if cote in bibliotheque:
-                print(f"Le livre {cote} ---- {titre} par {auteur} ---- est déjà présent dans la bibliothèque")
-            else:
-                bibliotheque[cote] = {
-                    'titre': titre,
-                    'auteur': auteur,
-                    'date_publication': ligne['date_publication']
-                }
-                print(f"Le livre {cote} ---- {titre} par {auteur} ---- a été ajouté avec succès")
-    return bibliotheque
 
 
 
@@ -111,14 +81,6 @@ Cette partie doit être faite dans une fonction qui s'appelle "modifier_cote_sha
 """
 
 # Écrire votre code ici
-def modifier_cote_shakespeare(bibliotheque):
-    anciennes_cotes = list(bibliotheque.keys())
-    for cote in anciennes_cotes:
-        if bibliotheque[cote]['auteur'] == "William Shakespeare":
-            # La cote est Sxxx, on veut WSxxx
-            nouvelle_cote = "WS" + cote[1:] # Retire 'S' et ajoute 'WS'
-            bibliotheque[nouvelle_cote] = bibliotheque.pop(cote)
-    return bibliotheque
 
 
 
@@ -145,27 +107,11 @@ Cette partie doit être faite dans une fonction qui s'appelle "ajouter_emprunts"
 
 # Écrire votre code ici
 
-def ajouter_emprunts(bibliotheque, emprunts_csv):
-    
-    with open(emprunts_csv, 'r', encoding="utf-8") as f:
-        lecteur = csv.DictReader(f)
 
-        emprunt = {}
-        for ligne in lecteur:
-            cote = ligne["cote_rangement"]
-            date = ligne["date_emprunt"]
-            emprunt[cote] = date
 
-        for cote in bibliotheque:
 
-            if cote in emprunt:
-                bibliotheque[cote]["emprunt"] = "emprunté"
-                bibliotheque[cote]["date_emprunt"] = emprunt[cote]
-            else:
-                bibliotheque[cote]["emprunt"] = "disponible"
-                bibliotheque[cote]["date_emprunt"] = None
 
-    return bibliotheque
+
 
 
 
@@ -191,36 +137,10 @@ Cette partie doit être faite dans une fonction qui s'appelle "ajouter_retards".
 """
 
 # Écrire votre code ici
-def calculer_retards(bibliotheque):
 
-    today = datetime.now()
 
-    print("\n--- Livres en retard ---")
 
-    for cote in bibliotheque:
 
-        livre = bibliotheque[cote]
-        livre["frais_retard"] = 0
-        livre["livres_perdus"] = False
-
-        if livre["emprunts"] == "emprunté":
-            if livre["date_emprunt"] != None:
-                date_emprunt = datetime.strptime(livre["date_emprunt"], "%Y-%m-%d")
-                jours_ecoules = (today - date_emprunt).days
-
-            if jours_ecoules > 30:
-                jours_retard = jours_ecoules - 30
-                frais = jours_retard * 2
-
-                if frais > 100:
-                    frais = 100
-                livre["frais_retard"] = frais
-                print(cote, " - ", livre["titre"], " : ", frais, "$ de frais")
-
-            if jours_ecoules > 365:
-                livre["livres_perdus"] = True
-
-    return bibliotheque
 
 
 
@@ -245,30 +165,7 @@ Cette partie doit être faite dans une fonction qui s'appelle "sauvegarder_bibli
 """
 
 # Écrire votre code ici
-def sauvegarder_bibliotheque(bibliotheque, fichier_sortie):
 
-    with open(fichier_sortie, 'w', newline='', encoding='utf-8') as f:
-        writer = csv.writer(f)
-        writer.writerow([
-            "cote_rangement",
-            "titre",
-            "auteur",
-            "date_publication",
-            "emprunt",
-            "date_emprunt",
-            "frais_retard"
-        ])
-        for cote in bibliotheque:
-            livre = bibliotheque[cote]
-            writer.writerow([
-                cote,
-                livre["titre"],
-                livre["auteur"],
-                livre["date_publication"],
-                livre["emprunts"],
-                livre["date_emprunt"],
-                livre["frais_retard"]
-            ])
 
 
 
@@ -301,21 +198,26 @@ def main():
     ############################################################
     
     # Écrire votre code ici 
-    bibliotheque = charger_collection("collection_bibliotheque.csv")
+    
+
+
+
 
     ############################################################
     # Partie 2 : Appel de la fonction ajouter_nouvelle_collection
     ############################################################
     
     # Écrire votre code ici 
-    bibliotheque = ajouter_nouvelle_collection(bibliotheque, "nouvelle_collection.csv")
+    
+
+
+
 
     ############################################################
     # Partie 3 : Appel de la fonction modifier_cote_shakespeare
     ############################################################
 
     # Écrire votre code ici 
-    bibliotheque = modifier_cote_shakespeare(bibliotheque)
 
     
 
@@ -326,7 +228,7 @@ def main():
     ############################################################
 
     # Écrire votre code ici 
-    bibliotheque = ajouter_emprunts(bibliotheque,"emprunts.csv")
+    
 
 
 
@@ -336,7 +238,7 @@ def main():
     ############################################################
 
     # Écrire votre code ici 
-    bibliotheque = calculer_retards(bibliotheque)
+   
 
    
 
@@ -346,7 +248,7 @@ def main():
     
     # Écrire votre code ici 
     
-    sauvegarder_bibliotheque(bibliotheque, "bibliotheque_nouvelle.csv")
+
 
 
 
