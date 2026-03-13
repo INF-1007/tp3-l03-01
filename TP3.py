@@ -293,8 +293,7 @@ Exigences :
 # Écrire votre code ici
 def main():
 
-
-    pass # À enlever
+     # À enlever
 
     ############################################################
     # Partie 1 : Appel de la fonction charger_collection 
