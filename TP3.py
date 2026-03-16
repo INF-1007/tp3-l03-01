@@ -201,24 +201,24 @@ def calculer_retards(bibliotheque):
 
         livre = bibliotheque[cote]
         livre["frais_retard"] = 0
-        livre["livres_perdus"] = False
+        livre["livre_perdu"] = False
 
-        if livre["emprunts"] == "emprunté":
-            if livre["date_emprunt"] != None:
+        if livre.get("emprunt") == "emprunté":
+            if livre.get("date_emprunt") is not None:
                 date_emprunt = datetime.strptime(livre["date_emprunt"], "%Y-%m-%d")
                 jours_ecoules = (today - date_emprunt).days
 
-            if jours_ecoules > 30:
-                jours_retard = jours_ecoules - 30
-                frais = jours_retard * 2
+                if jours_ecoules > 30:
+                    jours_retard = jours_ecoules - 30
+                    frais = jours_retard * 2
 
-                if frais > 100:
-                    frais = 100
-                livre["frais_retard"] = frais
-                print(cote, " - ", livre["titre"], " : ", frais, "$ de frais")
+                    if frais > 100:
+                        frais = 100
+                    livre["frais_retard"] = frais
+                    print(cote, " - ", livre["titre"], " : ", frais, "$ de frais")
 
-            if jours_ecoules > 365:
-                livre["livres_perdus"] = True
+                if jours_ecoules > 365:
+                    livre["livre_perdu"] = True
 
     return bibliotheque
 
@@ -250,24 +250,26 @@ def sauvegarder_bibliotheque(bibliotheque, fichier_sortie):
     with open(fichier_sortie, 'w', newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
         writer.writerow([
-            "cote_rangement",
+            "cote",
             "titre",
             "auteur",
             "date_publication",
             "emprunt",
             "date_emprunt",
-            "frais_retard"
+            "frais_retard",
+            "livre_perdu"
         ])
         for cote in bibliotheque:
             livre = bibliotheque[cote]
             writer.writerow([
                 cote,
-                livre["titre"],
-                livre["auteur"],
-                livre["date_publication"],
-                livre["emprunts"],
-                livre["date_emprunt"],
-                livre["frais_retard"]
+                livre.get("titre", ""),
+                livre.get("auteur", ""),
+                livre.get("date_publication", ""),
+                livre.get("emprunt", ""),
+                livre.get("date_emprunt", ""),
+                livre.get("frais_retard", 0),
+                livre.get("livre_perdu", False)
             ])
 
 
@@ -345,7 +347,7 @@ def main():
     
     # Écrire votre code ici 
     
-    sauvegarder_bibliotheque(bibliotheque, "bibliotheque_nouvelle.csv")
+    sauvegarder_bibliotheque(bibliotheque, "bibliotheque_mise_a_jour.csv")
 
 
 
